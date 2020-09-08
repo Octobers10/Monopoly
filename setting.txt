@@ -1,0 +1,18 @@
+New York
+10000
+Hong Kong 
+10000
+London
+10000
+Toronto
+10000
+Casablanca
+10000
+Paris
+10000
+Vancouver
+10000
+Beijing
+10000
+Tokyo
+10000
