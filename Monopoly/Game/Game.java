@@ -43,6 +43,7 @@ public class Game {
     public ArrayList<Land> getLands() { return cells; }
 
     public void start(GameDisplay gameDisplay){
+        Card.changeBoardSize(cells.size());
         Random rand = new Random();
         while (alivePlayers.size()>1) {
             waitResponse(gameDisplay);
@@ -63,7 +64,7 @@ public class Game {
     public void waitResponse(NotificationWindow notification){
         while (!notification.isUpdated()){
             try{Thread.sleep(2000);} 
-            catch (Exception e){}
+            catch (Exception e){System.out.println(e.getMessage());}
         }
     }
 
@@ -71,7 +72,7 @@ public class Game {
         while (!game.isUpdated()){
             try{
                 Thread.sleep(2000);
-            } catch (Exception e){}
+            } catch (Exception e){System.out.println(e.getMessage());}
         }
     }
 
@@ -79,9 +80,9 @@ public class Game {
         Player owner = land.getOwner();
         NotificationWindow notification;
         if ("Start".equals(land.getName())){
-            String result = "";
+            String[] result = {""};
             boolean lost = ! Card.draw(player, result);
-            notification = new NotificationWindow(player, land, result);
+            notification = new NotificationWindow(player, land, result[0]);
             notification.run();
             waitResponse(notification);
             if (lost) {

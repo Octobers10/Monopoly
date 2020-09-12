@@ -50,6 +50,7 @@ public class SellWindow extends JFrame implements Runnable{
     HashMap<Land, Pair<JComboBox<Integer>, LinkedCheckBox>> soldProperties = new HashMap<>();  
 
     public SellWindow(Player player) {
+        super();
         setLocationRelativeTo(null);
         setTitle(player.getName()+"'s properties:");
         ArrayList<Land> allProperties = player.getProperties();
@@ -58,7 +59,7 @@ public class SellWindow extends JFrame implements Runnable{
         this.getContentPane().add(new JLabel("# of Buildings:     "));
         this.getContentPane().add(new JLabel("Sell Land?     "));
         for (Land land: allProperties){
-            this.getContentPane().add(new JLabel(land.getName()));
+            this.add(new JLabel(land.getName()));
             Integer bound = land.getNumBuildings()+1;
             Integer[] range = new Integer[bound];
             for (int i=0; i<= land.getNumBuildings(); ++i){ range[i]=i; }
@@ -72,8 +73,8 @@ public class SellWindow extends JFrame implements Runnable{
             });
             Pair<JComboBox<Integer>,LinkedCheckBox> pair = new Pair<JComboBox<Integer>,LinkedCheckBox>(coBox, chBox);
             soldProperties.put(land, pair);
-            this.getContentPane().add(coBox);
-            this.getContentPane().add(chBox);
+            this.add(coBox);
+            this.add(chBox);
         }
         this.add(money);
         JButton confirm = new JButton("Confirm");

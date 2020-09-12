@@ -126,9 +126,11 @@ public class GameDisplay extends javax.swing.JFrame implements Runnable {
                     try{Thread.sleep(2000);}
                     catch(Exception e){System.out.println(e.getMessage());}
                 }
-                System.out.println("Updated");
                 game.getPlayers().get(game.getCurrentPlayerIndex()).pay(-sw.getValue());
                 sw.dispose();
+                
+            } else {
+                JOptionPane.showMessageDialog(new JFrame(),"The game is not started. Press Roll to start the game.");
             }
             
         });
@@ -161,7 +163,7 @@ public class GameDisplay extends javax.swing.JFrame implements Runnable {
         PlayerIcon currentPlayerIcon = players.get(playerIndex);
         if (lost) currentPlayerIcon.setBackground(Color.GRAY);
         currentPlayerIcon.playerAccount.setText("$"+player.getBankAccount());
-
+        currentPlayerIcon.playerPosition.setText("Position: "+player.getCurrentPosition());
         String allPropertiesName="";
         ArrayList<Land> allProperties = player.getProperties();
         for (Land l: allProperties){
