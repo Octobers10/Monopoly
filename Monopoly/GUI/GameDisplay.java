@@ -13,7 +13,6 @@ public class GameDisplay extends javax.swing.JFrame implements Runnable {
     private JPanel upperPanel, lowerPanel;
     private JLabel currentPlayer;
     private DiceIcon diceIcon;
-    private JButton sellIcon=new JButton("Sell");
     private ArrayList<PlayerIcon> players = new ArrayList<>();
     private ArrayList<LandIcon> lands = new ArrayList<>();
 
@@ -104,7 +103,7 @@ public class GameDisplay extends javax.swing.JFrame implements Runnable {
     private void init(Game game) {
         upperPanel = new JPanel();
         int numPlayer = game.getNumPlayer();
-        upperPanel.setLayout(new GridLayout(1, numPlayer + 3));
+        upperPanel.setLayout(new GridLayout(1, numPlayer + 2));
 
         ArrayList<Player> allPlayers = game.getPlayers();
         for (Player p : allPlayers) {
@@ -118,27 +117,9 @@ public class GameDisplay extends javax.swing.JFrame implements Runnable {
 
         diceIcon = new DiceIcon();
 
-        sellIcon.addActionListener(l->{
-            if (game.getCurrentPlayerIndex()>=0){
-                Player currentPlayer = game.getPlayers().get(game.getCurrentPlayerIndex());
-                SellWindow sw = new SellWindow(currentPlayer);
-                while (! sw.isUpdated()){
-                    try{Thread.sleep(2000);}
-                    catch(Exception e){System.out.println(e.getMessage());}
-                }
-                game.getPlayers().get(game.getCurrentPlayerIndex()).pay(-sw.getValue());
-                sw.dispose();
-                
-            } else {
-                JOptionPane.showMessageDialog(new JFrame(),"The game is not started. Press Roll to start the game.");
-            }
-            
-        });
-
         upperPanel.add(diceIcon);
         upperPanel.add(currentPlayer);
         upperPanel.add(diceIcon);
-        upperPanel.add(sellIcon);
         diceIcon.setVisible(true);
         currentPlayer.setVisible(true);
         upperPanel.setVisible(true);
@@ -157,6 +138,10 @@ public class GameDisplay extends javax.swing.JFrame implements Runnable {
     
     }
 
+    public static String toMultiline(String orig){
+        return "<html>" + orig.replaceAll("\n", "<br>");
+    }
+
     public void updateCurrentPlayer(Player player){
         boolean lost = player.isBankrupt();
         int playerIndex = player.getPlayerIndex();
@@ -167,8 +152,9 @@ public class GameDisplay extends javax.swing.JFrame implements Runnable {
         String allPropertiesName="";
         ArrayList<Land> allProperties = player.getProperties();
         for (Land l: allProperties){
-            allPropertiesName+=l.getName()+" ";
+            allPropertiesName+=l.getName()+";\n";
         }
+        allPropertiesName=toMultiline(allPropertiesName);
         currentPlayerIcon.playerProperties.setText(allPropertiesName);
     }
 
@@ -188,8 +174,9 @@ public class GameDisplay extends javax.swing.JFrame implements Runnable {
         String allPropertiesName="";
         ArrayList<Land> allProperties = player.getProperties();
         for (Land l: allProperties){
-            allPropertiesName+=l.getName()+" ";
+            allPropertiesName+=l.getName()+";\n";
         }
+        allPropertiesName=toMultiline(allPropertiesName);
         currentPlayerIcon.playerProperties.setText(allPropertiesName);
     }
 

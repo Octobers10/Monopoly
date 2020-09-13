@@ -45,6 +45,5 @@ public class Main {
         GameDisplay gameDisplay = new GameDisplay(game);
         gameDisplay.run();
         game.start(gameDisplay);
-
     }
 }

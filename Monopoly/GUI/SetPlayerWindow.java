@@ -17,8 +17,8 @@ public class SetPlayerWindow extends javax.swing.JFrame implements Runnable {
             public void actionPerformed(ActionEvent err1) {
                 try{
                     num = Integer.parseInt(numPlayer.getText());
-                    if (num<=0){
-                        JOptionPane.showMessageDialog(null, "The number of players should be bigger than 0!", "Error Message", JOptionPane.ERROR_MESSAGE);
+                    if (num<=1){
+                        JOptionPane.showMessageDialog(null, "The number of players should be bigger than 1!", "Error Message", JOptionPane.ERROR_MESSAGE);
                     }
                 } catch (NumberFormatException err2){
                     JOptionPane.showMessageDialog(null, "The number of players should be an integer!", "Error Message", JOptionPane.ERROR_MESSAGE);

@@ -57,8 +57,8 @@ public class Game {
             currentPlayer.move(dice, cells.size());
             Land currentLand = cells.get(currentPlayer.getCurrentPosition());
             arrive(currentPlayer, currentLand, gameDisplay);
-            
         }
+        JOptionPane.showMessageDialog(new JFrame(),"Player " + (currentPlayerIndex+1) + " wins!");
     }
 
     public void waitResponse(NotificationWindow notification){
@@ -131,7 +131,7 @@ public class Game {
                 }
                 player.pay(-sw.getValue());
                 sw.dispose();
-                if (alivePlayers.get(currentPlayerIndex).pay(toll)){
+                if (! alivePlayers.get(currentPlayerIndex).pay(toll)){
                     JOptionPane.showMessageDialog(new JFrame(),"You are bankrupte! Try harder next time. ");
                     owner.addProperties(player.getProperties());
                     owner.pay(-player.getBankAccount());

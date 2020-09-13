@@ -26,23 +26,23 @@ public class Card {
         int money = rand.nextInt(moneyBound);
         switch(randomInt){
             case(1):
-                result[0]="Player "+player.getName()+" moves forward by "+steps+"!";
+                result[0]=player.getName()+" moves forward by "+steps+"!";
                 player.move(steps, boardSize);
                 break;
             case(2):
-                result[0]="Player "+player.getName()+" moves backward by "+steps+"!";
+                result[0]=player.getName()+" moves backward by "+steps+"!";
                 player.move(-steps, boardSize);
                 break;
             case(3):
-                result[0]="Player "+player.getName()+" gets "+money+"!";
+                result[0]=player.getName()+" gets "+money+"!";
                 player.pay(money);
                 break;
             case(4):
                 if (! player.pay(money)) {
-                    result[0]="Player "+player.getName()+" is bankrupted!";
+                    result[0]=player.getName()+" is bankrupted!";
                     return false;
                 }
-                result[0]="Player "+player.getName()+" pays "+money+"!";
+                result[0]=player.getName()+" pays "+money+"!";
                 break;
         }
         return true;
