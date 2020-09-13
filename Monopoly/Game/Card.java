@@ -14,9 +14,7 @@ public class Card {
     private static final int moveBound=6;
     private static int boardSize=0;
 
-    public static void changeBoardSize(int size){
-        boardSize=size;
-    }
+    public static void changeBoardSize(int size){ boardSize=size;}
 
 
     public static boolean draw(Player player, String [] result){

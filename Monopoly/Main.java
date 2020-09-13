@@ -2,8 +2,7 @@ package Monopoly;
 
 import java.util.Scanner;
 
-import Monopoly.Game.Game;
-import Monopoly.Game.Player;
+import Monopoly.Game.*;
 import Monopoly.Property.Land;
 import Monopoly.GUI.*;
 

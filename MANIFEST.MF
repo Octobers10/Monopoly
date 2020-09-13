@@ -1,0 +1,4 @@
+Manifest-Version: 1.0
+Main-Class: Monopoly.Main
+Class-Path: Monopoly.jar
+
