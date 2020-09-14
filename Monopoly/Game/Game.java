@@ -1,7 +1,6 @@
 package Monopoly.Game;
 
 import java.util.ArrayList;
-import java.util.Random;
 
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
@@ -42,33 +41,9 @@ public class Game {
 
     public ArrayList<Land> getLands() { return cells; }
 
-    public void start(GameDisplay gameDisplayGiven){
+    public void init(GameDisplay gameDisplayGiven){
         this.gameDisplay = gameDisplayGiven;
         Card.changeBoardSize(cells.size());
-        Random rand = new Random();
-        while (alivePlayers.size()>1) {
-            waitResponse(gameDisplay);
-            incCurrentPlayer();
-            gameDisplay.updateCurrentIcon(currentPlayerIndex);
-            dice = rand.nextInt(5)+1;
-            gameDisplay.updateDice(dice, currentPlayerIndex+1);
-            Player currentPlayer = alivePlayers.get(currentPlayerIndex);
-            if (currentPlayer.isBankrupt()) continue;
-
-            currentPlayer.move(dice, cells.size());
-            Land currentLand = cells.get(currentPlayer.getCurrentPosition());
-            arrive(currentPlayer, currentLand, gameDisplay);
-        }
-        JOptionPane.showMessageDialog(new JFrame(),"Player " + (currentPlayerIndex+1) + " wins!");
-    }
-
-
-    public void waitResponse(GameDisplay game){
-        while (!game.isUpdated()){
-            try{
-                Thread.sleep(2000);
-            } catch (Exception e){System.out.println(e.getMessage());}
-        }
     }
 
     public void arrive(Player player, Land land, GameDisplay gameDisplay){
@@ -143,5 +118,20 @@ public class Game {
                 break;
         }
         gameDisplay.updateCurrentPlayer(player);
+    }
+
+    public void notify(int dices){
+        if (alivePlayers.size()>1) {
+            incCurrentPlayer();
+            gameDisplay.updateCurrentIcon(currentPlayerIndex);
+            Player currentPlayer = alivePlayers.get(currentPlayerIndex);
+            if (currentPlayer.isBankrupt()) return;
+            currentPlayer.move(dices, cells.size());
+            Land currentLand = cells.get(currentPlayer.getCurrentPosition());
+            arrive(currentPlayer, currentLand, gameDisplay);
+        } else {
+            JOptionPane.showMessageDialog(new JFrame(),"Player " + (currentPlayerIndex+1) + " wins!");
+            System.exit(0);
+        }
     }
 }

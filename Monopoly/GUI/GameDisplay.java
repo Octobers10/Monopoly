@@ -7,6 +7,7 @@ import Monopoly.Property.Land;
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.Random;
 
 public class GameDisplay extends javax.swing.JFrame implements Runnable {
     private static final long serialVersionUID = 1L;
@@ -78,26 +79,21 @@ public class GameDisplay extends javax.swing.JFrame implements Runnable {
         private static final long serialVersionUID = 1L;
         private JButton start = new JButton("Roll");
         private JLabel dice = new JLabel("Dice: "+0);
-        private boolean updated=false;
+        private int num = 0;
+        private Game game;
 
-        public boolean isUpdated(){
-            return updated;
-        }
-
-
-
-        public DiceIcon(){
+        public DiceIcon(Game game){
+            this.game = game;
             this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
             this.add(dice);
             this.add(start);
-            start.addActionListener(l->updated = !updated);
+            start.addActionListener(l->{
+                Random rand = new Random();
+                num = rand.nextInt(5)+1;
+                dice.setText("Dice: "+num);
+                game.notify(num);
+            });
         }
-
-        public void updateDice(int num){ 
-            dice.setText("Dice: "+num);
-            updated=false;
-        }
-
     }
 
     private void init(Game game) {
@@ -115,7 +111,7 @@ public class GameDisplay extends javax.swing.JFrame implements Runnable {
         currentPlayer = new JLabel("Current: Player 1");
         currentPlayer.setBorder(BorderFactory.createLineBorder(Color.BLUE,2));
 
-        diceIcon = new DiceIcon();
+        diceIcon = new DiceIcon(game);
 
         upperPanel.add(diceIcon);
         upperPanel.add(currentPlayer);
@@ -179,18 +175,11 @@ public class GameDisplay extends javax.swing.JFrame implements Runnable {
         allPropertiesName=toMultiline(allPropertiesName);
         currentPlayerIcon.playerProperties.setText(allPropertiesName);
     }
-
-    public void updateDice(int num, int nextPlayer){
-        diceIcon.updateDice(num);
-    }
     
     public void updateCurrentIcon(int nextPlayer){
         currentPlayer.setText("Current: Player " + (nextPlayer+1));
     }
 
-    public boolean isUpdated(){
-        return diceIcon.isUpdated();
-    }
 
     @Override
     public void run() {
