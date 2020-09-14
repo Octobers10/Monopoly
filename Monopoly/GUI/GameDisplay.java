@@ -183,10 +183,10 @@ public class GameDisplay extends javax.swing.JFrame implements Runnable {
     public void updateDice(int num, int nextPlayer){
         diceIcon.updateDice(num);
     }
+    
     public void updateCurrentIcon(int nextPlayer){
         currentPlayer.setText("Current: Player " + (nextPlayer+1));
     }
-
 
     public boolean isUpdated(){
         return diceIcon.isUpdated();

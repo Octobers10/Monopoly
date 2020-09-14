@@ -3,14 +3,14 @@ package Monopoly;
 import java.util.Scanner;
 
 import Monopoly.Game.*;
-import Monopoly.Property.Land;
+import Monopoly.Property.*;
 import Monopoly.GUI.*;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 
 public class Main {
-    public static void main(String[] args) throws FileNotFoundException {
+    public static void main (String[] args) throws FileNotFoundException {
         // read a file to construct the game
         File file = new File("setting.txt");
         Scanner reader = new Scanner(file);
