@@ -13,7 +13,7 @@ import Monopoly.Property.Land;
 
 public class Game {
     private ArrayList<Land> cells=new ArrayList<>();
-    private ArrayList<Player> alivePlayers=new ArrayList<>();
+    private ArrayList<Player> allPlayers=new ArrayList<>();
     private GameDisplay gameDisplay;
     private int currentPlayerIndex=-1;
     private int dice=0;
@@ -25,19 +25,19 @@ public class Game {
     
     public void addLand(Land land){ cells.add(land);}
 
-    public void addPlayer(Player player){ alivePlayers.add(player); }
+    public void addPlayer(Player player){ allPlayers.add(player); }
 
     public int getNumLand(){ return cells.size(); }
 
-    public int getNumPlayer(){ return alivePlayers.size(); }
+    public int getNumPlayer(){ return allPlayers.size(); }
 
     public int getDice(){ return dice;}
 
     public int getCurrentPlayerIndex(){ return currentPlayerIndex; }
 
-    public void incCurrentPlayer(){ currentPlayerIndex = (currentPlayerIndex+1)%alivePlayers.size(); }
+    public void incCurrentPlayer(){ currentPlayerIndex = (currentPlayerIndex+1)%allPlayers.size(); }
 
-    public ArrayList<Player> getPlayers() { return alivePlayers; }
+    public ArrayList<Player> getPlayers() { return allPlayers; }
 
     public ArrayList<Land> getLands() { return cells; }
 
@@ -61,7 +61,7 @@ public class Game {
     }
 
     public void notify(int stage, boolean performed){
-        Player player = alivePlayers.get(currentPlayerIndex);
+        Player player = allPlayers.get(currentPlayerIndex);
         Land land = cells.get(player.getCurrentPosition());
         Player owner = land.getOwner();
         switch(stage){
@@ -97,7 +97,7 @@ public class Game {
                 long toll = land.getToll();
                 boolean paySucceed = player.pay(toll);
                 if (! paySucceed){
-                    SellWindow sw = new SellWindow(alivePlayers.get(currentPlayerIndex));
+                    SellWindow sw = new SellWindow(allPlayers.get(currentPlayerIndex));
                     sw.run();
                     while (! sw.isUpdated()){
                         try{Thread.sleep(1000);}
@@ -105,7 +105,7 @@ public class Game {
                     }
                     player.pay(-sw.getValue());
                     sw.dispose();
-                    if (! alivePlayers.get(currentPlayerIndex).pay(toll)){
+                    if (! allPlayers.get(currentPlayerIndex).pay(toll)){
                         JOptionPane.showMessageDialog(new JFrame(),"You are bankrupte! Try harder next time. ");
                         owner.addProperties(player.getProperties());
                         owner.pay(-player.getBankAccount());
@@ -121,10 +121,10 @@ public class Game {
     }
 
     public void notify(int dices){
-        if (alivePlayers.size()>1) {
+        if (allPlayers.size()>1) {
             incCurrentPlayer();
             gameDisplay.updateCurrentIcon(currentPlayerIndex);
-            Player currentPlayer = alivePlayers.get(currentPlayerIndex);
+            Player currentPlayer = allPlayers.get(currentPlayerIndex);
             if (currentPlayer.isBankrupt()) return;
             currentPlayer.move(dices, cells.size());
             Land currentLand = cells.get(currentPlayer.getCurrentPosition());
