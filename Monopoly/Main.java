@@ -20,7 +20,8 @@ import java.io.FileNotFoundException;
 
 public class Main {
     /** 
-     * The Main class is responsible for initializing the game, such as the map and the players
+     * The Main class is responsible for initializing the game, 
+     * such as reading map & players info, initializing controller and GUI
     */
 
     public static Game game = new Game();
@@ -33,32 +34,32 @@ public class Main {
         while(reader.hasNext()) {
             String name = reader.nextLine();
             int originalPrice = Integer.valueOf(reader.nextLine());
-            Land land = new Land(name, originalPrice, game.getNumLand());
-            game.addLand(land);
+            Land land = new Land(name, originalPrice, Game.getNumLand());
+            Game.addLand(land);
         }
 
         reader.close();
 
         //2. display window prompt for total number of players
         SetPlayerWindow window1 = new SetPlayerWindow();
-        window1.run();
+        window1.setVisible(true);
     }
 
     
     public static void notify(int numPlayer){
-        /*
-            notify(int numPlayer) is called by the SetPlayerWindow when the user enters a valid number (triggered by ActionEvent)
-            @numPlayer: an integer representing the number of players in this game
-            @return: None
-        */
+        /**
+         * notify(int numPlayer) is called by the SetPlayerWindow when the user enters a valid number (triggered by ActionEvent)
+         * @param numPlayer  An integer representing the number of players in this game
+         * 
+         * @return  None
+         */
 
         //future functionality: customize player name
         for (int i = 0; i < numPlayer; ++i) {
-            game.addPlayer(new Player("Player " + (i + 1), i));
+            Game.addPlayer(new Player("Player " + (i + 1), i));
         }
 
-        GameDisplay gameDisplay = new GameDisplay(game);
-        gameDisplay.run();
+        GameDisplay gameDisplay = new GameDisplay();
         game.init(gameDisplay);
     }
 }

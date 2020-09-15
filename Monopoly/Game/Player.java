@@ -45,18 +45,13 @@ public class Player {
     //bankrupcy
     public boolean isBankrupt(){ return lost; }
 
-    public void bankrupt(){ 
-        lost=true; 
-        System.out.println("Sorry, you are bankrupted.");
-    }
+    public void bankrupt(){ lost=true; }
     
 
 
-    public void addProperties(ArrayList<Land> lands){
-        properties.addAll(lands);
-    }
+    public void addProperties(ArrayList<Land> lands){ properties.addAll(lands); }
 
-    public void addLand(Land land){ properties.add(land);}
+    public void addLand(Land land){ properties.add(land); }
 
 
 

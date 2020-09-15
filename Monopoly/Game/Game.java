@@ -12,101 +12,105 @@ import Monopoly.Property.Land;
 
 
 public class Game {
-    private ArrayList<Land> cells=new ArrayList<>();
-    private ArrayList<Player> allPlayers=new ArrayList<>();
-    private GameDisplay gameDisplay;
-    private int currentPlayerIndex=-1;
-    private int dice=0;
+    /**
+     * Game class is the Controller in the MVC model;
+     * it keeps track of all the lands and the player's data
+     */
+    private static ArrayList<Land> cells=new ArrayList<>();
+    private static ArrayList<Player> allPlayers=new ArrayList<>();
+    private static GameDisplay gameDisplay;
+    private static int currentPlayerIndex=-1;
+    private static int dice=0;
 
     public Game(){
         Land start = new Land("Start", 0, 0);
         cells.add(start);
     }
     
-    public void addLand(Land land){ cells.add(land);}
+    public static void addLand(Land land){ cells.add(land);}
 
-    public void addPlayer(Player player){ allPlayers.add(player); }
+    public static void addPlayer(Player player){ allPlayers.add(player); }
 
-    public int getNumLand(){ return cells.size(); }
+    public static int getNumLand(){ return cells.size(); }
 
-    public int getNumPlayer(){ return allPlayers.size(); }
+    public static int getNumPlayer(){ return allPlayers.size(); }
 
-    public int getDice(){ return dice;}
+    public static int getDice(){ return dice;}
 
-    public int getCurrentPlayerIndex(){ return currentPlayerIndex; }
+    public static int getCurrentPlayerIndex(){ return currentPlayerIndex; }
 
-    public void incCurrentPlayer(){ currentPlayerIndex = (currentPlayerIndex+1)%allPlayers.size(); }
+    public static ArrayList<Player> getPlayers() { return allPlayers; }
 
-    public ArrayList<Player> getPlayers() { return allPlayers; }
+    public static ArrayList<Land> getLands() { return cells; }
 
-    public ArrayList<Land> getLands() { return cells; }
+    private static void incCurrentPlayer(){ currentPlayerIndex = (currentPlayerIndex+1)%allPlayers.size(); }
 
     public void init(GameDisplay gameDisplayGiven){
-        this.gameDisplay = gameDisplayGiven;
+        gameDisplay = gameDisplayGiven;
+        gameDisplay.setVisible(true);
         Card.changeBoardSize(cells.size());
     }
 
-    public void arrive(Player player, Land land, GameDisplay gameDisplay){
-        NotificationWindow notification;
-        if ("Start".equals(land.getName())){
-            String[] result = {""};
-            boolean lost = ! Card.draw(player, result);
-            notification = new NotificationWindow(player, land, result[0], this);
-            notification.run();
-            if (lost) { player.bankrupt();}
+    public static void arrive(Player player, Land land) {
+        if ("Start".equals(land.getName())) {
+            String[] result = { "" };
+            boolean lost = !Card.draw(player, result);
+            new NotificationWindow(player, land, result[0]);
+            if (lost) player.bankrupt();
         } else {
-            notification = new NotificationWindow(player, land, null, this);
-            notification.run();
+            new NotificationWindow(player, land, null);
         }
     }
 
-    public void notify(int stage, boolean performed){
+    public static void notify(int stage, boolean performed) {
         Player player = allPlayers.get(currentPlayerIndex);
         Land land = cells.get(player.getCurrentPosition());
         Player owner = land.getOwner();
-        switch(stage){
-            case(1):
-                if (player.isBankrupt()){
+        switch (stage) {
+            case (1):
+                if (player.isBankrupt()) {
                     ArrayList<Land> allLands = player.getProperties();
-                        for (Land l: allLands){ l.setOwner(null); 
+                    for (Land l : allLands) {
+                        l.setOwner(null);
                     }
                 }
                 break;
-            case(2):
-                if (performed){
-                    if (player.pay(land.getPrice())){
+            case (2):
+                if (performed) {
+                    if (player.pay(land.getPrice())) {
                         player.addLand(land);
                         land.setOwner(player);
-                        gameDisplay.updateLand(land);
+                        GameDisplay.updateLand(land);
                     } else {
-                        JOptionPane.showMessageDialog(new JFrame(),"Sorry, you don't have enough money");
+                        JOptionPane.showMessageDialog(new JFrame(), "Sorry, you don't have enough money");
                     }
                 }
                 break;
-            case(3):
-                if (performed){
-                    if (player.pay(land.getOriginalPrice()/5)){
+            case (3):
+                if (performed) {
+                    if (player.pay(land.getOriginalPrice() / 5)) {
                         land.build(1);
-                        gameDisplay.updateLand(land);
+                        GameDisplay.updateLand(land);
                     } else {
-                        JOptionPane.showMessageDialog(new JFrame(),"Sorry, you don't have enough money");
+                        JOptionPane.showMessageDialog(new JFrame(), "Sorry, you don't have enough money");
                     }
                 }
                 break;
-            case(4):
+            case (4):
                 long toll = land.getToll();
                 boolean paySucceed = player.pay(toll);
-                if (! paySucceed){
+                if (!paySucceed) {
                     SellWindow sw = new SellWindow(allPlayers.get(currentPlayerIndex));
-                    sw.run();
-                    while (! sw.isUpdated()){
-                        try{Thread.sleep(1000);}
-                        catch(Exception e){}
+                    while (!sw.isUpdated()) {
+                        try {
+                            Thread.sleep(1000);
+                        } catch (Exception e) {
+                        }
                     }
                     player.pay(-sw.getValue());
                     sw.dispose();
-                    if (! allPlayers.get(currentPlayerIndex).pay(toll)){
-                        JOptionPane.showMessageDialog(new JFrame(),"You are bankrupte! Try harder next time. ");
+                    if (!allPlayers.get(currentPlayerIndex).pay(toll)) {
+                        JOptionPane.showMessageDialog(new JFrame(), "You are bankrupte! Try harder next time. ");
                         owner.addProperties(player.getProperties());
                         owner.pay(-player.getBankAccount());
                         player.bankrupt();
@@ -114,21 +118,22 @@ public class Game {
                 } else {
                     owner.pay(-toll);
                 }
-                gameDisplay.updateOtherPlayer(owner);
+                GameDisplay.updateOtherPlayer(owner);
                 break;
         }
-        gameDisplay.updateCurrentPlayer(player);
+        GameDisplay.updateCurrentPlayer(player);
     }
 
-    public void notify(int dices){
-        if (allPlayers.size()>1) {
+    public static void notify(int dices) {
+        if (allPlayers.size() > 1) {
             incCurrentPlayer();
-            gameDisplay.updateCurrentIcon(currentPlayerIndex);
+            GameDisplay.updateCurrentIcon(currentPlayerIndex);
             Player currentPlayer = allPlayers.get(currentPlayerIndex);
-            if (currentPlayer.isBankrupt()) return;
+            if (currentPlayer.isBankrupt())
+                return;
             currentPlayer.move(dices, cells.size());
             Land currentLand = cells.get(currentPlayer.getCurrentPosition());
-            arrive(currentPlayer, currentLand, gameDisplay);
+            arrive(currentPlayer, currentLand);
         } else {
             JOptionPane.showMessageDialog(new JFrame(),"Player " + (currentPlayerIndex+1) + " wins!");
             System.exit(0);

@@ -11,7 +11,7 @@ import Monopoly.Property.Land;
 
 
 
-public class NotificationWindow extends JFrame implements Runnable {
+public class NotificationWindow extends JFrame {
 
     private static final long serialVersionUID = 1L;
 
@@ -19,7 +19,7 @@ public class NotificationWindow extends JFrame implements Runnable {
     //private JButton confirm = new JButton("Confirm"); //ArrayList<JLabel> actions = new ArrayList<>();
     
 
-    public NotificationWindow(Player player, Land land, String optionalMessage, Game game){
+    public NotificationWindow(Player player, Land land, String optionalMessage){
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
         setLayout(new BoxLayout(getContentPane(), BoxLayout.Y_AXIS));
@@ -34,7 +34,7 @@ public class NotificationWindow extends JFrame implements Runnable {
             JLabel action2 = new JLabel(optionalMessage);
             JButton confirm = new JButton("continue");
             confirm.addActionListener(e-> {
-                game.notify(1, false);
+                Game.notify(1, false);
                 this.dispose();}
             );
             this.add(action1);
@@ -45,13 +45,13 @@ public class NotificationWindow extends JFrame implements Runnable {
             
             JButton purchase = new JButton("Yes");
             purchase.addActionListener(e->{
-                game.notify(2, true);
+                Game.notify(2, true);
                 this.dispose();}
             );
 
             JButton cancel = new JButton("No");
             cancel.addActionListener(e->{
-                game.notify(2, false);
+                Game.notify(2, false);
                 this.dispose();}
             );
             
@@ -63,13 +63,13 @@ public class NotificationWindow extends JFrame implements Runnable {
             
             JButton purchase = new JButton("Yes");
             purchase.addActionListener(e->{
-                game.notify(3, true);
+                Game.notify(3, true);
                 this.dispose();}
             );
 
             JButton cancel = new JButton("No");
             cancel.addActionListener(e->{
-                game.notify(3, false);
+                Game.notify(3, false);
                 this.dispose();}
             );
             this.add(action1);
@@ -80,7 +80,7 @@ public class NotificationWindow extends JFrame implements Runnable {
             JLabel action2 = new JLabel(optionalMessage);
             JButton confirm = new JButton("continue");
             confirm.addActionListener(e-> {
-                game.notify(4, false);
+                Game.notify(4, false);
                 this.dispose();}
             );
             
@@ -88,9 +88,8 @@ public class NotificationWindow extends JFrame implements Runnable {
             this.add(action2);
             this.add(confirm);
         }
+        pack();
+        setVisible(true);
     }
 
-    public void run(){ 
-        pack();
-        this.setVisible(true);}
 }

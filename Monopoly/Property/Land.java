@@ -30,24 +30,6 @@ public class Land {
 
     public void build(int numProperties){ this.numBuildings += numProperties; }
 
-    public int sell(int numProperties, boolean sellLand){
-        /*
-        Permanent sale of 75% of the net value;
-        @numBuildings: how many properties on this land are sold
-        @sellLand: is this land also sold; this can be true only when all properties on this land are sold
-        */
-
-        assert(numProperties <= this.numBuildings);
-        if (sellLand) {
-            assert(numProperties == this.numBuildings);
-            this.owner=null;
-        }
-        
-        int landPrice = (sellLand)? originalPrice:0;
-        return (int) ((int) (numProperties * originalPrice * 0.2 + landPrice) * 0.75);
-
-    }
-
     public long getToll(){
         return (long) ((long) (owner==null?0:numBuildings * originalPrice * 0.2 + originalPrice) * 0.1);
     }

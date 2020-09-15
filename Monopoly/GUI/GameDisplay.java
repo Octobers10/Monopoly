@@ -9,19 +9,19 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.Random;
 
-public class GameDisplay extends javax.swing.JFrame implements Runnable {
+public class GameDisplay extends javax.swing.JFrame {
     private static final long serialVersionUID = 1L;
     private JPanel upperPanel, lowerPanel;
-    private JLabel currentPlayer;
     private DiceIcon diceIcon;
-    private ArrayList<PlayerIcon> players = new ArrayList<>();
-    private ArrayList<LandIcon> lands = new ArrayList<>();
+    private static JLabel currentPlayer;
+    private static ArrayList<PlayerIcon> players = new ArrayList<>();
+    private static ArrayList<LandIcon> lands = new ArrayList<>();
 
-    public GameDisplay(Game game) {
+    public GameDisplay() {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
         setTitle("Monopoly");
-        init(game);
+        init();
         setLayout(new BoxLayout(getContentPane(), BoxLayout.Y_AXIS));
         upperPanel.setVisible(true);
         lowerPanel.setVisible(true);
@@ -37,7 +37,7 @@ public class GameDisplay extends javax.swing.JFrame implements Runnable {
         public PlayerIcon(Player p) {
             playerName = new JLabel(p.getName());
             playerAccount = new JLabel("$" + p.getBankAccount());
-            playerPosition = new JLabel("Position: "+p.getCurrentPosition());
+            playerPosition = new JLabel("Position: " + p.getCurrentPosition());
             String allPropertiesName = "";
             ArrayList<Land> allProperties = p.getProperties();
             for (Land l : allProperties) {
@@ -49,7 +49,7 @@ public class GameDisplay extends javax.swing.JFrame implements Runnable {
             this.add(playerPosition);
             this.add(playerAccount);
             this.add(playerProperties);
-            this.setBorder(BorderFactory.createLineBorder(Color.black,2));
+            this.setBorder(BorderFactory.createLineBorder(Color.black, 2));
             this.setBackground(Color.white);
         }
     }
@@ -78,30 +78,28 @@ public class GameDisplay extends javax.swing.JFrame implements Runnable {
 
         private static final long serialVersionUID = 1L;
         private JButton start = new JButton("Roll");
-        private JLabel dice = new JLabel("Dice: "+0);
+        private JLabel dice = new JLabel("Dice: " + 0);
         private int num = 0;
-        private Game game;
 
-        public DiceIcon(Game game){
-            this.game = game;
+        public DiceIcon() {
             this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
             this.add(dice);
             this.add(start);
-            start.addActionListener(l->{
+            start.addActionListener(l -> {
                 Random rand = new Random();
-                num = rand.nextInt(5)+1;
-                dice.setText("Dice: "+num);
-                game.notify(num);
+                num = rand.nextInt(5) + 1;
+                dice.setText("Dice: " + num);
+                Game.notify(num);
             });
         }
     }
 
-    private void init(Game game) {
+    private void init() {
         upperPanel = new JPanel();
-        int numPlayer = game.getNumPlayer();
+        int numPlayer = Game.getNumPlayer();
         upperPanel.setLayout(new GridLayout(1, numPlayer + 2));
 
-        ArrayList<Player> allPlayers = game.getPlayers();
+        ArrayList<Player> allPlayers = Game.getPlayers();
         for (Player p : allPlayers) {
             PlayerIcon playerIcon = new PlayerIcon(p);
             players.add(playerIcon);
@@ -109,9 +107,9 @@ public class GameDisplay extends javax.swing.JFrame implements Runnable {
             playerIcon.setVisible(true);
         }
         currentPlayer = new JLabel("Current: Player 1");
-        currentPlayer.setBorder(BorderFactory.createLineBorder(Color.BLUE,2));
+        currentPlayer.setBorder(BorderFactory.createLineBorder(Color.BLUE, 2));
 
-        diceIcon = new DiceIcon(game);
+        diceIcon = new DiceIcon();
 
         upperPanel.add(diceIcon);
         upperPanel.add(currentPlayer);
@@ -121,68 +119,62 @@ public class GameDisplay extends javax.swing.JFrame implements Runnable {
         upperPanel.setVisible(true);
 
         lowerPanel = new JPanel();
-        int numLand = game.getNumLand();
-        GridLayout lowerPanelLayout = new GridLayout(2, (int) Math.ceil(numLand/2.0));
+        int numLand = Game.getNumLand();
+        GridLayout lowerPanelLayout = new GridLayout(2, (int) Math.ceil(numLand / 2.0));
         lowerPanel.setLayout(lowerPanelLayout);
-        ArrayList<Land> allLands = game.getLands();
-        for (Land l: allLands){
+        ArrayList<Land> allLands = Game.getLands();
+        for (Land l : allLands) {
             LandIcon landIcon = new LandIcon(l);
             lands.add(landIcon);
             lowerPanel.add(landIcon);
             landIcon.setVisible(true);
         }
-    
+
     }
 
-    public static String toMultiline(String orig){
+    public static String toMultiline(String orig) {
         return "<html>" + orig.replaceAll("\n", "<br>");
     }
 
-    public void updateCurrentPlayer(Player player){
+    public static void updateCurrentPlayer(Player player) {
         boolean lost = player.isBankrupt();
         int playerIndex = player.getPlayerIndex();
         PlayerIcon currentPlayerIcon = players.get(playerIndex);
-        if (lost) currentPlayerIcon.setBackground(Color.GRAY);
-        currentPlayerIcon.playerAccount.setText("$"+player.getBankAccount());
-        currentPlayerIcon.playerPosition.setText("Position: "+player.getCurrentPosition());
-        String allPropertiesName="";
+        if (lost)
+            currentPlayerIcon.setBackground(Color.GRAY);
+        currentPlayerIcon.playerAccount.setText("$" + player.getBankAccount());
+        currentPlayerIcon.playerPosition.setText("Position: " + player.getCurrentPosition());
+        String allPropertiesName = "";
         ArrayList<Land> allProperties = player.getProperties();
-        for (Land l: allProperties){
-            allPropertiesName+=l.getName()+";\n";
-        }
-        allPropertiesName=toMultiline(allPropertiesName);
+        for (Land l : allProperties) { allPropertiesName += l.getName() + ";\n";}
+        allPropertiesName = toMultiline(allPropertiesName);
         currentPlayerIcon.playerProperties.setText(allPropertiesName);
     }
 
-    public void updateLand(Land land){
+    public static void updateLand(Land land) {
         int landIndex = land.getLandIndex();
         LandIcon currentLandIcon = lands.get(landIndex);
-        currentLandIcon.landOwner.setText("Owner: "+land.getOwner()==null?"None":land.getOwner().getName());
-        currentLandIcon.landNumBuildings.setText("Buildings: "+land.getNumBuildings());
-        currentLandIcon.landToll.setText("Toll: "+land.getOwner()==null?"None":""+land.getToll());
+        currentLandIcon.landOwner.setText("Owner: " + land.getOwner() == null ? "None" : land.getOwner().getName());
+        currentLandIcon.landNumBuildings.setText("Buildings: " + land.getNumBuildings());
+        currentLandIcon.landToll.setText("Toll: " + land.getOwner() == null ? "None" : "" + land.getToll());
     }
 
-    public void updateOtherPlayer(Player player) {
+    public static void updateOtherPlayer(Player player) {
         int playerIndex = player.getPlayerIndex();
         PlayerIcon currentPlayerIcon = players.get(playerIndex);
-        currentPlayerIcon.playerAccount.setText("$"+player.getBankAccount());
+        currentPlayerIcon.playerAccount.setText("$" + player.getBankAccount());
 
-        String allPropertiesName="";
+        String allPropertiesName = "";
         ArrayList<Land> allProperties = player.getProperties();
-        for (Land l: allProperties){
-            allPropertiesName+=l.getName()+";\n";
+        for (Land l : allProperties) {
+            allPropertiesName += l.getName() + ";\n";
         }
-        allPropertiesName=toMultiline(allPropertiesName);
+        allPropertiesName = toMultiline(allPropertiesName);
         currentPlayerIcon.playerProperties.setText(allPropertiesName);
     }
-    
-    public void updateCurrentIcon(int nextPlayer){
-        currentPlayer.setText("Current: Player " + (nextPlayer+1));
+
+    public static void updateCurrentIcon(int nextPlayer) {
+        currentPlayer.setText("Current: Player " + (nextPlayer + 1));
     }
 
-
-    @Override
-    public void run() {
-        setVisible(true);
-    }
 }

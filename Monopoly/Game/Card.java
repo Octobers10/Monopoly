@@ -2,12 +2,11 @@ package Monopoly.Game;
 
 import java.util.Random;
 public class Card {
-    /*
-        moveForward,
-        moveBackword,
-        giveMoney,
-        takeMoney,
-        oneMoreDraw
+    /*  Card class allows the player to make a draw; the result can be the following:
+        move forward by [0, moveBound],
+        move backword by [0, moveBound],
+        receive money by [0, moneyBound],
+        pay tax by [0, moneyBound],
     */
 
     private static final int moneyBound = 500;
@@ -18,6 +17,13 @@ public class Card {
 
 
     public static boolean draw(Player player, String [] result){
+        /**
+         * the player gets to draw a card randomly
+         * @player  the player that makes the draw
+         * @result  additional message
+         * 
+         * @return  false if the player is bankrupted, true otherwise 
+         */
         Random rand = new Random();
         int randomInt = rand.nextInt(4)+1;
         int steps = rand.nextInt(moveBound);
@@ -44,6 +50,5 @@ public class Card {
                 break;
         }
         return true;
-
     }
 }

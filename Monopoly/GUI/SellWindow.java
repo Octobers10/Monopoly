@@ -42,7 +42,7 @@ class LinkedCheckBox extends JCheckBox {
     }
 }
 
-public class SellWindow extends JFrame implements Runnable{
+public class SellWindow extends JFrame {
     private static final long serialVersionUID = 1L;
     private long value=0;
     JLabel money = new JLabel("Total gain: $0");
@@ -81,7 +81,7 @@ public class SellWindow extends JFrame implements Runnable{
         confirm.addActionListener(l->updated=true);
         this.getContentPane().add(confirm);
         pack();
-        run();
+        this.setVisible(true);
     }
 
     private void calculateNet(HashMap<Land, Pair<JComboBox<Integer>, LinkedCheckBox>> soldProperties){
@@ -96,9 +96,6 @@ public class SellWindow extends JFrame implements Runnable{
         value = val;
     }
 
-    public void run(){
-        this.setVisible(true);
-    }
 
     public boolean isUpdated(){return updated;}
 
